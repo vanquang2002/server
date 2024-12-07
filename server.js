@@ -37,21 +37,34 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Middleware
+// Parse JSON
 app.use(json());
+
+// Lấy danh sách các URL frontend từ biến môi trường
+const allowedOrigins = process.env.REACT_URL
+  ? process.env.REACT_URL.split(",")
+  : ["https://client-admin-nine.vercel.app", "https://client-customers-y2wh.vercel.app"];
+
+// Middleware CORS
 app.use(
   cors({
-    origin: process.env.REACT_URL || "http://localhost:3001", // Đường dẫn frontend
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Hỗ trợ cookie (nếu cần)
+    credentials: true,
   })
 );
 
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: process.env.REACT_URL || "http://localhost:3001",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
