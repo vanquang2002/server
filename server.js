@@ -41,7 +41,7 @@ const server = http.createServer(app);
 app.use(json());
 app.use(
   cors({
-    origin: process.env.REACT_URL || "http://localhost:3000", // Đường dẫn frontend
+    origin: process.env.REACT_URL || "http://localhost:3001", // Đường dẫn frontend
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Hỗ trợ cookie (nếu cần)
@@ -51,7 +51,7 @@ app.use(
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: process.env.REACT_URL || "http://localhost:3000",
+    origin: process.env.REACT_URL || "http://localhost:3001",
     methods: ["GET", "POST"],
     credentials: true,
   },
